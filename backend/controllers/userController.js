@@ -99,10 +99,23 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Update User Profile" });
 });
 
+// @desc Get userhome page
+// route GET /api/users/userhome
+// @access Private
+const getUserHome = asyncHandler(async (req, res) => {
+  const user = {
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+  res.status(200).json(user);
+});
+
 export {
   authUser,
   updateUserProfile,
   getUserProfile,
   logoutUser,
   registerUser,
+  getUserHome,
 };

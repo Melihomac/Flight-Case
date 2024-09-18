@@ -19,7 +19,7 @@ const Login = () => {
 
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      navigate("/flights");
     }
   }, [navigate, userInfo]);
 

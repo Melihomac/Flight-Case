@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, Container, NavDropdown, Badge } from "react-bootstrap";
 import { FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
-import { UseSelector, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";

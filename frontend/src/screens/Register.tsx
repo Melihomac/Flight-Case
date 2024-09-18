@@ -33,7 +33,7 @@ const Register = () => {
       try {
         const res = await register({ name, email, password }).unwrap();
         dispatch(setCredentials({ ...res }));
-        navigate("/");
+        navigate("/flights");
       } catch (err) {
         toast.error(err.data.message || err.error);
       }

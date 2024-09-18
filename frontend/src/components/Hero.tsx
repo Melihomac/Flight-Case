@@ -10,7 +10,7 @@ const Hero = () => {
           <h1 className="text-center mb-4">Welcome to the Flight Case App</h1>
           <p className="text-center mb-4">
             Welcome to my Flight App project. This project was made upon
-            request. Made by Melih Omac
+            request. Made by Melih Omac. Click signin or signup and create a profile
           </p>
           <div className="d-flex">
             <LinkContainer to="/login">
