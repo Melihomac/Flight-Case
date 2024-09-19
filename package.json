@@ -23,7 +23,8 @@
     "express": "^4.21.0",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.6.3"
+    "mongoose": "^8.6.3",
+    "schiphol-client-js": "^1.0.2"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",
