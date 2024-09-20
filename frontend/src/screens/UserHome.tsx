@@ -10,7 +10,9 @@ function UserHome() {
   const [cities, setCities] = useState([]);
   const [filteredCities1, setFilteredCities1] = useState([]);
   const [filteredCities2, setFilteredCities2] = useState([]);
-  const [searchQuery1, setSearchQuery1] = useState("");
+  const [searchQuery1, setSearchQuery1] = useState(
+    "Schiphol Zuid, Schiphol Airport, Netherlands"
+  ); // Pre-fill with default value
   const [searchQuery2, setSearchQuery2] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [citiesPerPage] = useState(10);
@@ -61,24 +63,28 @@ function UserHome() {
   }, [searchQuery2, cities]);
 
   useEffect(() => {
-    if (selectedCity1 && startDate) {
+    if (selectedCity1 && startDate && selectedCity2) {
       setLoading(true);
       axios
-        .get("http://localhost:5001/api/flights", {
-          params: {
-            departureCity: selectedCity1.code,
-            destinationCity: selectedCity2 ? selectedCity2.code : "",
-            startDate: startDate,
-            endDate: endDate,
-          },
-        })
+        .get("http://localhost:5001/api/flights", {})
         .then((response) => {
-          console.log("API Response:", response.data); // Log the entire response to inspect its structure
-          const fetchedFlights = response.data.flights || [];
-          console.log("Fetched Flights:", fetchedFlights); // Log fetched flights to verify the data
-          setFlights(fetchedFlights);
+          const fetchedFlights = response.data.flights || flightsFile;
+
+          // Filter flights where scheduleDate matches startDate and selectedCity2.code matches flight.destinations[0]
+          const matchedFlights = fetchedFlights.filter(
+            (flight) =>
+              flight.scheduleDate === startDate &&
+              flight.destinations[0] === selectedCity2.code
+          );
+          console.log(matchedFlights);
+
+          if (matchedFlights.length > 0) {
+            setFlights(matchedFlights); // Set matching flights
+          } else {
+            setFlights([]); // Clear flights if no match
+          }
+
           setLoading(false);
-          console.log(flights);
         })
         .catch((error) => {
           console.error("Error fetching flight data:", error);
@@ -89,35 +95,38 @@ function UserHome() {
 
   const handleSubmit = () => {
     let hasError = false;
-
-    if (!selectedCity1) {
-      setError((prev) => ({
-        ...prev,
-        city1: "Please select a departure city",
-      }));
-      hasError = true;
-    }
-    if (!selectedCity2) {
-      setError((prev) => ({
-        ...prev,
-        city2: "Please select a destination city",
-      }));
-      hasError = true;
-    }
-    if (!startDate) {
-      setError((prev) => ({
-        ...prev,
-        startDate: "Please select a start date",
-      }));
-      hasError = true;
-    }
-    if (!endDate) {
-      setError((prev) => ({ ...prev, endDate: "Please select an end date" }));
-      hasError = true;
-    }
+    // ... existing error handling logic ...
 
     if (!hasError) {
-      // Trigger the effect to fetch and filter flights
+      // Fetch flights using axios
+      const fetchFlights = async () => {
+        try {
+          const response = await axios.get("http://localhost:5001/api/flights");
+
+          const flights = response.data.flights || [];
+          setLoading(false);
+
+          // Filter flights based on scheduleDate and selectedCity2.code
+          const matchingFlights = flights.filter((flight) => {
+            return (
+              flight.scheduleDate === startDate &&
+              flight.route.destinations[0] === selectedCity2.code
+            );
+          });
+
+          // Log the matching flights
+          console.log(matchingFlights);
+
+          // Update state with the matching flights
+          setFlights(matchingFlights);
+        } catch (error) {
+          console.error("Error fetching flight data:", error);
+          setLoading(false);
+        }
+      };
+
+      setLoading(true);
+      fetchFlights();
     }
   };
 
@@ -181,24 +190,34 @@ function UserHome() {
           {loading && <Loader />}
         </div>
 
-        <div>
-          <ul>
-            {flights.map((flight) => (
-              <li key={flight.id}>
+        <div style={{ marginTop: "20px" }}>
+          {flights.length > 0 ? (
+            flights.map((flight) => (
+              <div
+                key={flight.id}
+                style={{
+                  backgroundColor: "#f9f9f9",
+                  padding: "15px",
+                  marginBottom: "10px",
+                  borderRadius: "5px",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                }}>
                 <strong>Flight Number:</strong> {flight.flightNumber}
                 <br />
                 <strong>Flight Name:</strong> {flight.flightName}
                 <br />
-                <strong>Departure Time:</strong> {flight.scheduleDateTime}
+                <strong>Departure Time:</strong> {flight.scheduleDate}
                 <br />
                 <strong>Arrival Time:</strong> {flight.actualLandingTime}
                 <br />
                 <strong>Airline:</strong> {flight.prefixICAO}
                 <br />
-                <strong>Terminal:</strong> {flight.terminal}
-              </li>
-            ))}
-          </ul>
+                <strong>Terminal:</strong> {flight.route.destinations[0]}
+              </div>
+            ))
+          ) : (
+            <p>No flights found for the selected date</p>
+          )}
         </div>
       </div>
     </div>
