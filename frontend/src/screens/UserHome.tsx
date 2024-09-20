@@ -56,7 +56,7 @@ function UserHome() {
 
   useEffect(() => {
     const result2 = cities.filter((city) =>
-      city.city.toLowerCase().includes(searchQuery2.toLowerCase())
+      city.name.toLowerCase().includes(searchQuery2.toLowerCase())
     );
     setFilteredCities2(result2);
     setCurrentPage(1);
@@ -95,17 +95,34 @@ function UserHome() {
 
   const handleSubmit = () => {
     let hasError = false;
-    // ... existing error handling logic ...
 
     if (!hasError) {
       // Fetch flights using axios
       const fetchFlights = async () => {
+        console.log("American" + startDate);
         try {
-          const response = await axios.get("http://localhost:5001/api/flights");
+          const response = await axios.get(
+            //?scheduleDate=2024-09-01&includedelays=false&page=0&sort=%2BscheduleTime
+            `http://localhost:5001/api/flights`,
+            {
+              withCredentials: false,
+              params: {
+                scheduleDate: startDate,
+              },
+            }
+          );
+
+          console.log(response.config.url);
+          if (response.status === 200) {
+            console.log("API request successful:", response.data);
+          } else {
+            console.error("API request failed with status:", response.status);
+          }
 
           const flights = response.data.flights || [];
           setLoading(false);
-
+          console.log(response.data);
+          console.log(response.status);
           // Filter flights based on scheduleDate and selectedCity2.code
           const matchingFlights = flights.filter((flight) => {
             return (
@@ -113,7 +130,6 @@ function UserHome() {
               flight.route.destinations[0] === selectedCity2.code
             );
           });
-
           // Log the matching flights
           console.log(matchingFlights);
 

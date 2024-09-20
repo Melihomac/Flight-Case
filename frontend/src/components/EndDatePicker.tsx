@@ -11,7 +11,7 @@ const EndDatePicker = ({ endDate, setEndDate, error }) => {
         id="endDate"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
-        max={today} // Ensure future dates cannot be selected
+        min={today} // Ensure future dates cannot be selected
         style={{
           width: "100%",
           padding: "10px",

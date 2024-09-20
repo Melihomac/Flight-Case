@@ -11,7 +11,7 @@ const StartDatePicker = ({ startDate, setStartDate, error }) => {
         id="startDate"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
-        max={today} // Ensure future dates cannot be selected
+        min={today} // Disallow past dates
         style={{
           width: "100%",
           padding: "10px",
