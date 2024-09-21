@@ -24,6 +24,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+    bookFlight: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/myflights`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     updateUser: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/profile`,
@@ -39,4 +46,5 @@ export const {
   useLogoutMutation,
   useRegisterMutation,
   useUpdateUserMutation,
+  useBookFlightMutation,
 } = usersApiSlice;

@@ -2,18 +2,15 @@ import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 
-// Bilgiler...
 // @desc Auth user/set token
 // route POST /api/users/auth
 // @access Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({
-    email,
-  });
+  const user = await User.findOne({ email });
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
-    res.status(201).json({
+    res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -111,6 +108,38 @@ const getUserHome = asyncHandler(async (req, res) => {
   res.status(200).json(user);
 });
 
+const bookFlight = asyncHandler(async (req, res) => {
+  const { flightNumber, flightName, scheduleDate } = req.body;
+
+  // Check if the flight already exists in the database
+  const flightExists = await Flight.findOne({ flightNumber, scheduleDate });
+  if (flightExists) {
+    res.status(400);
+    throw new Error("Flight already booked.");
+  }
+
+  // Create and save new flight booking
+  const flight = await Flight.save({
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+    flightNumber,
+    flightName,
+    scheduleDate,
+  });
+
+  if (flight) {
+    res.status(201).json({
+      flightNumber: flight.flightNumber,
+      flightName: flight.flightName,
+      scheduleDate: flight.scheduleDate,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid flight data.");
+  }
+});
+
 export {
   authUser,
   updateUserProfile,
@@ -118,4 +147,5 @@ export {
   logoutUser,
   registerUser,
   getUserHome,
+  bookFlight,
 };

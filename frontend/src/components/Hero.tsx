@@ -18,6 +18,11 @@ const Hero = () => {
                 Sign In
               </Button>
             </LinkContainer>
+            <LinkContainer to="/flights">
+              <Button variant="primary" className="me-3">
+                Search for Flights
+              </Button>
+            </LinkContainer>
             <LinkContainer to='/register'>
               <Button variant="secondary">Sign Up</Button>
             </LinkContainer>

@@ -1,8 +1,8 @@
 import express from "express";
 const router = express.Router();
-import { getDestination } from "../controllers/destinationController.js";
+import { bookFlight } from "../controllers/myflightController.js";
 
 // Flight verileri için route
-router.get("/", getDestination);
+router.get("/", bookFlight);
 
 export default router;

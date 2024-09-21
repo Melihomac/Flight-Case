@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import citiesFile from "../../../cities.json";
 import Loader from "../components/Loader";
 import CitySearchInput from "../components/CitySearch";
 import StartDatePicker from "../components/StartDatePicker";
 import EndDatePicker from "../components/EndDatePicker";
+import { useSelector } from "react-redux";
 
 function UserHome() {
   const [cities, setCities] = useState([]);
@@ -12,7 +14,7 @@ function UserHome() {
   const [filteredCities2, setFilteredCities2] = useState([]);
   const [searchQuery1, setSearchQuery1] = useState(
     "Schiphol Zuid, Schiphol Airport, Netherlands"
-  ); // Pre-fill with default value
+  );
   const [searchQuery2, setSearchQuery2] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [citiesPerPage] = useState(10);
@@ -29,14 +31,14 @@ function UserHome() {
   const [endDate, setEndDate] = useState("");
   const [flights, setFlights] = useState([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const loadCities = () => {
       const cityData = citiesFile;
-
       const validCities = cityData.filter(
         (destination) => destination.city && destination.city.trim() !== ""
       );
-
       setCities(validCities);
       setFilteredCities1(validCities);
       setFilteredCities2(validCities);
@@ -70,7 +72,6 @@ function UserHome() {
         .then((response) => {
           const fetchedFlights = response.data.flights || flightsFile;
 
-          // Filter flights where scheduleDate matches startDate and selectedCity2.code matches flight.destinations[0]
           const matchedFlights = fetchedFlights.filter(
             (flight) =>
               flight.scheduleDate === startDate &&
@@ -79,9 +80,9 @@ function UserHome() {
           console.log(matchedFlights);
 
           if (matchedFlights.length > 0) {
-            setFlights(matchedFlights); // Set matching flights
+            setFlights(matchedFlights);
           } else {
-            setFlights([]); // Clear flights if no match
+            setFlights([]);
           }
 
           setLoading(false);
@@ -95,24 +96,17 @@ function UserHome() {
 
   const handleSubmit = () => {
     let hasError = false;
-
     if (!hasError) {
-      // Fetch flights using axios
       const fetchFlights = async () => {
-        console.log("American" + startDate);
         try {
           const response = await axios.get(
-            //?scheduleDate=2024-09-01&includedelays=false&page=0&sort=%2BscheduleTime
             `http://localhost:5001/api/flights`,
             {
               withCredentials: false,
-              params: {
-                scheduleDate: startDate,
-              },
+              params: { scheduleDate: startDate },
             }
           );
 
-          console.log(response.config.url);
           if (response.status === 200) {
             console.log("API request successful:", response.data);
           } else {
@@ -121,19 +115,14 @@ function UserHome() {
 
           const flights = response.data.flights || [];
           setLoading(false);
-          console.log(response.data);
-          console.log(response.status);
-          // Filter flights based on scheduleDate and selectedCity2.code
+
           const matchingFlights = flights.filter((flight) => {
             return (
               flight.scheduleDate === startDate &&
               flight.route.destinations[0] === selectedCity2.code
             );
           });
-          // Log the matching flights
-          console.log(matchingFlights);
 
-          // Update state with the matching flights
           setFlights(matchingFlights);
         } catch (error) {
           console.error("Error fetching flight data:", error);
@@ -144,6 +133,10 @@ function UserHome() {
       setLoading(true);
       fetchFlights();
     }
+  };
+
+  const selectFlight = (flight) => {
+    navigate("/myflights", { state: { flight } });
   };
 
   return (
@@ -229,6 +222,27 @@ function UserHome() {
                 <strong>Airline:</strong> {flight.prefixICAO}
                 <br />
                 <strong>Terminal:</strong> {flight.route.destinations[0]}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: "10px",
+                  }}>
+                  <button
+                    onClick={() => selectFlight(flight)}
+                    style={{
+                      padding: "10px 20px",
+                      fontSize: "16px",
+                      borderRadius: "5px",
+                      border: "1px solid #ddd",
+                      backgroundColor: "#007bff",
+                      color: "white",
+                      cursor: "pointer",
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                    }}>
+                    Select Flight
+                  </button>
+                </div>
               </div>
             ))
           ) : (
