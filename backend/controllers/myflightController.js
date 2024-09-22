@@ -5,33 +5,44 @@ import Flight from "../models/flightModel.js";
 // @route   POST /api/flights/book
 // @access  Private
 const bookFlight = asyncHandler(async (req, res) => {
-  const { flightNumber, flightName, scheduleDate } = req.body;
+  // req.body'deki veriyi loglayın
 
-  // Check if the flight already exists in the database
-  const flightExists = await Flight.findOne({ flightNumber, scheduleDate, user: req.user._id });
-  if (flightExists) {
+  const { flightNumber, flightName, scheduleDate } = req.body;
+  console.log("Received request body:", req.body);
+
+  if (!flightNumber || !flightName || !scheduleDate) {
     res.status(400);
-    throw new Error("Flight already booked.");
+    throw new Error("Missing flight data");
   }
 
-  // Create and save new flight booking
+  const userExists = await Flight.findOne({ flightNumber });
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
   const flight = await Flight.create({
-    user: req.user._id, // Associate with logged-in user
     flightNumber,
     flightName,
     scheduleDate,
   });
 
   if (flight) {
-    res.status(201).json({
-      flightNumber: flight.flightNumber,
-      flightName: flight.flightName,
-      scheduleDate: flight.scheduleDate,
-    });
+    console.log("Flight booked successfully:", flight);
+    res.status(201).json(flight);
   } else {
     res.status(400);
-    throw new Error("Invalid flight data.");
+    throw new Error("Flight booking failed");
   }
 });
 
-export { bookFlight };
+const getBookFlight = asyncHandler(async (req, res) => {
+  const user = {
+    flightNumber: req.flightNumber,
+    flightName: req.flightName,
+    scheduleDate: req.scheduleDate,
+  };
+  res.status(200).json(user);
+});
+
+export { bookFlight, getBookFlight };

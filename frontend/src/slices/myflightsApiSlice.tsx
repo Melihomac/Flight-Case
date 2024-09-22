@@ -1,9 +1,6 @@
-import { apiSlice } from "./apiSlice";
-import { usersApiSlice } from "./usersApiSlice";
+import { apiSliceFlight } from "./apiSlice";
 
-const USERS_URL = "/api";
-
-export const myFlightsApiSlice = apiSlice.injectEndpoints({
+export const myFlightsApiSlice = apiSliceFlight.injectEndpoints({
   endpoints: (builder) => ({
     bookFlight: builder.mutation({
       query: (data) => ({
@@ -15,4 +12,4 @@ export const myFlightsApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useBookFlightMutation } = usersApiSlice;
+export const { useBookFlightMutation } = myFlightsApiSlice;

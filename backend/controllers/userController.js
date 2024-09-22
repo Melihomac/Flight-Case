@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
+import Flight from "../models/flightModel.js";
 
 // @desc Auth user/set token
 // route POST /api/users/auth
@@ -112,17 +113,14 @@ const bookFlight = asyncHandler(async (req, res) => {
   const { flightNumber, flightName, scheduleDate } = req.body;
 
   // Check if the flight already exists in the database
-  const flightExists = await Flight.findOne({ flightNumber, scheduleDate });
+  const flightExists = await Flight.findOne({ flightNumber });
   if (flightExists) {
     res.status(400);
     throw new Error("Flight already booked.");
   }
 
   // Create and save new flight booking
-  const flight = await Flight.save({
-    _id: req.user._id,
-    name: req.user.name,
-    email: req.user.email,
+  const flight = await Flight.create({
     flightNumber,
     flightName,
     scheduleDate,

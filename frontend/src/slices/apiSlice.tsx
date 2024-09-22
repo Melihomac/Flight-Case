@@ -7,3 +7,9 @@ export const apiSlice = createApi({
   tagTypes: ["User"],
   endpoints: (builder) => ({}),
 });
+
+export const apiSliceFlight = createApi({
+  baseQuery,
+  tagTypes: ["Flight"],
+  endpoints: (builder) => ({}),
+});

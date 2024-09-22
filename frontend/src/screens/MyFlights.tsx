@@ -1,10 +1,11 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useBookFlightMutation } from "../slices/usersApiSlice";
+import { useBookFlightMutation } from "../slices/myflightsApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 
 const MyFlights = () => {
   const location = useLocation();
@@ -19,20 +20,37 @@ const MyFlights = () => {
 
   const bookFlightSave = async () => {
     try {
-      const res = await bookFlight({
+      // Gönderilen flight verilerini loglayın
+      console.log("Sending flight data:", {
         flightNumber: flight.flightNumber,
         flightName: flight.flightName,
         scheduleDate: flight.scheduleDate,
-      }).unwrap();
-      dispatch(setCredentials({ ...res }));
+      });
+
+      const res = await axios.post(
+        "http://localhost:5001/api/myflights",
+        {
+          flightNumber: flight.flightNumber,
+          flightName: flight.flightName,
+          scheduleDate: flight.scheduleDate,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // Verinin JSON formatında olduğunu belirtiyoruz
+          },
+        }
+      );
+
+      console.log("Response from server:", res.data);
+      toast.success("Flight Added");
     } catch (err) {
-      console.error("Error object:", err); // Log the full error
+      console.error("Error object:", err);
       if (err?.data?.message) {
         toast.error(err.data.message);
       } else if (err?.error) {
         toast.error(err.error);
       } else {
-        toast.error("An unexpected error occurred");
+        toast.error("Flight already booked");
       }
     }
   };
@@ -61,7 +79,7 @@ const MyFlights = () => {
         </p>
       </div>
       <button
-        onClick={bookFlightSave} // Call bookFlight when the button is clicked
+        onClick={bookFlightSave}
         style={{
           padding: "10px 20px",
           fontSize: "16px",

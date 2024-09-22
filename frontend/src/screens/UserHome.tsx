@@ -6,7 +6,6 @@ import Loader from "../components/Loader";
 import CitySearchInput from "../components/CitySearch";
 import StartDatePicker from "../components/StartDatePicker";
 import EndDatePicker from "../components/EndDatePicker";
-import { useSelector } from "react-redux";
 
 function UserHome() {
   const [cities, setCities] = useState([]);

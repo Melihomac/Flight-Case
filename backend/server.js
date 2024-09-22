@@ -6,6 +6,7 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import flightRoutes from "./routes/flightRoutes.js";
+import destinationRoutes from "./routes/destinationRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -24,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/users", userRoutes);
-app.use("/api/users/myflights", userRoutes);
+app.use("/api/myflights", destinationRoutes);
 app.use("/api/flights", flightRoutes);
 
 app.get("/", (req, res) => res.send("Server is ready"));

@@ -26,7 +26,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     }),
     bookFlight: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL}/myflights`,
+        url: `api/myflights`,
         method: "POST",
         body: data,
       }),
