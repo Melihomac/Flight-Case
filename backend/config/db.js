@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Database connection for MongoDb
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI);

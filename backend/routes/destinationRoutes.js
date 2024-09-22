@@ -5,7 +5,7 @@ import {
   getBookFlight,
 } from "../controllers/myflightController.js";
 
-// Flight verileri için route
+// Flight data for routes
 router.post("/", bookFlight);
 router.get("/", getBookFlight);
 

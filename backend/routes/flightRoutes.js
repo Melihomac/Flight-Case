@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import { getFlights } from "../controllers/flightController.js";
 
-// Flight verileri için route
+// Flight data for routes
 router.get("/", getFlights);
 
 export default router;

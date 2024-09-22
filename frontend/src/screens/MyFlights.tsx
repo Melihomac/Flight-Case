@@ -2,7 +2,6 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useBookFlightMutation } from "../slices/myflightsApiSlice";
-import { setCredentials } from "../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -36,7 +35,7 @@ const MyFlights = () => {
         },
         {
           headers: {
-            "Content-Type": "application/json", // Verinin JSON formatında olduğunu belirtiyoruz
+            "Content-Type": "application/json",
           },
         }
       );

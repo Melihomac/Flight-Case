@@ -2,11 +2,10 @@ import asyncHandler from "express-async-handler";
 import Flight from "../models/flightModel.js";
 
 // @desc    Save a flight
-// @route   POST /api/flights/book
+// @route   POST /api/myflights
 // @access  Private
 const bookFlight = asyncHandler(async (req, res) => {
-  // req.body'deki veriyi loglayın
-
+  //fetch req params
   const { flightNumber, flightName, scheduleDate } = req.body;
   console.log("Received request body:", req.body);
 

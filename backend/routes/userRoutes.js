@@ -12,6 +12,7 @@ import { getFlights } from "../controllers/flightController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { bookFlight } from "../controllers/myflightController.js";
 
+//users data for routes
 router.post("/", registerUser);
 router.post("/auth", authUser);
 router.post("/logout", logoutUser);

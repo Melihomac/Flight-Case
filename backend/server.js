@@ -16,7 +16,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3000", // Frontend URL
-    credentials: true, // Cookies gönderim izinleri için
+    credentials: true, // Cokkies
   })
 );
 
