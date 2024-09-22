@@ -5,6 +5,7 @@ import { useBookFlightMutation } from "../slices/myflightsApiSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import Footer from "../components/Footer";
 
 const MyFlights = () => {
   const location = useLocation();
@@ -91,6 +92,7 @@ const MyFlights = () => {
         }}>
         Book Flight
       </button>
+      <Footer />
     </>
   );
 };

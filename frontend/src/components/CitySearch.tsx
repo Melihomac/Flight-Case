@@ -36,22 +36,37 @@ function CitySearchInput({
 
   return (
     <div style={{ flex: 1 }}>
-      <label>{label}</label>
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={handleSearch}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        placeholder="Type to search..."
-        style={{
-          width: "100%",
-          padding: "10px",
-          borderRadius: "5px",
-          border: "1px solid #ddd",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-        }}
-      />
+      <div
+        style={{ position: "relative", display: "flex", alignItems: "center" }}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          style={{
+            width: "20px",
+            height: "20px",
+            position: "absolute",
+            left: "10px",
+            pointerEvents: "none",
+          }}>
+          <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+        </svg>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearch}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder="Type to search..."
+          style={{
+            width: "100%",
+            padding: "10px 10px 10px 40px",
+            borderRadius: "5px",
+            border: "1px solid #ddd",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        />
+      </div>
       {dropdownVisible && searchQuery && (
         <div style={{ position: "relative" }}>
           <ul

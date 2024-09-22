@@ -2,16 +2,14 @@ import React from "react";
 
 const EndDatePicker = ({ endDate, setEndDate, error }) => {
   const today = new Date().toISOString().split("T")[0]; // Current date in YYYY-MM-DD format
-
   return (
     <div style={{ flex: 1 }}>
-      <label htmlFor="endDate">Return:</label>
       <input
         type="date"
         id="endDate"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
-        min={today} // Ensure future dates cannot be selected
+        min={today} // Ensure past dates cannot be selected
         style={{
           width: "100%",
           padding: "10px",

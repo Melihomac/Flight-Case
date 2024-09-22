@@ -7,19 +7,19 @@ function FetchFlights() {
       try {
         const response = await axios.get("/api/flights", {
           params: {
-            departureCity: "AMS", // Example parameter, replace with actual value
-            startDate: "2024-09-19", // Example parameter, replace with actual value
+            departureCity: "AMS",
+            startDate: "2024-09-19",
           },
         });
 
-        console.log(response.data); // Log the data to the console
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching flight data:", error);
       }
     };
 
     fetchFlights();
-  }, []); // Empty dependency array means this effect runs once after the initial render
+  }, []);
 
   return (
     <div>

@@ -5,7 +5,6 @@ const StartDatePicker = ({ startDate, setStartDate, error }) => {
 
   return (
     <div style={{ flex: 1 }}>
-      <label htmlFor="startDate">Depart:</label>
       <input
         type="date"
         id="startDate"

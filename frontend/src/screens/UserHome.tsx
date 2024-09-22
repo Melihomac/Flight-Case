@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import citiesFile from "../../../cities.json";
 import Loader from "../components/Loader";
 import CitySearchInput from "../components/CitySearch";
 import StartDatePicker from "../components/StartDatePicker";
 import EndDatePicker from "../components/EndDatePicker";
+import Footer from "../components/Footer";
+import { Button, Container, Row, Col, Card } from "react-bootstrap";
 
 function UserHome() {
   const [cities, setCities] = useState([]);
@@ -69,7 +71,7 @@ function UserHome() {
       axios
         .get("http://localhost:5001/api/flights", {})
         .then((response) => {
-          const fetchedFlights = response.data.flights || flightsFile;
+          const fetchedFlights = response.data.flights || [];
 
           const matchedFlights = fetchedFlights.filter(
             (flight) =>
@@ -78,12 +80,7 @@ function UserHome() {
           );
           console.log(matchedFlights);
 
-          if (matchedFlights.length > 0) {
-            setFlights(matchedFlights);
-          } else {
-            setFlights([]);
-          }
-
+          setFlights(matchedFlights.length > 0 ? matchedFlights : []);
           setLoading(false);
         })
         .catch((error) => {
@@ -101,16 +98,9 @@ function UserHome() {
           const response = await axios.get(
             `http://localhost:5001/api/flights`,
             {
-              withCredentials: false,
               params: { scheduleDate: startDate },
             }
           );
-
-          if (response.status === 200) {
-            console.log("API request successful:", response.data);
-          } else {
-            console.error("API request failed with status:", response.status);
-          }
 
           const flights = response.data.flights || [];
           setLoading(false);
@@ -130,6 +120,7 @@ function UserHome() {
       };
 
       setLoading(true);
+      setError(error);
       fetchFlights();
     }
   };
@@ -139,117 +130,140 @@ function UserHome() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Add your Flight</h1>
-      <div style={{ marginBottom: "20px" }}>
-        <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-          <CitySearchInput
-            label="From:"
-            searchQuery={searchQuery1}
-            setSearchQuery={setSearchQuery1}
-            filteredCities={filteredCities1.slice(
-              (currentPage - 1) * citiesPerPage,
-              currentPage * citiesPerPage
-            )}
-            onSelectCity={setSelectedCity1}
-            error={error.city1}
-          />
-          <CitySearchInput
-            label="To:"
-            searchQuery={searchQuery2}
-            setSearchQuery={setSearchQuery2}
-            filteredCities={filteredCities2.slice(
-              (currentPage - 1) * citiesPerPage,
-              currentPage * citiesPerPage
-            )}
-            onSelectCity={setSelectedCity2}
-            error={error.city2}
-          />
-        </div>
+    <>
+      <Container className="py-5 bg-light position-relative">
+        <h2 className="mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="me-2"
+            style={{ width: "30px", height: "30px" }}>
+            <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+          </svg>
+          Book Your Flight
+        </h2>
 
-        <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-          <StartDatePicker
-            startDate={startDate}
-            setStartDate={setStartDate}
-            error={error.startDate}
-          />
-          <EndDatePicker
-            endDate={endDate}
-            setEndDate={setEndDate}
-            error={error.endDate}
-          />
-        </div>
+        <Row className="mb-4 flex-row">
+          <Col>
+            <CitySearchInput
+              label="From:"
+              searchQuery={searchQuery1}
+              setSearchQuery={setSearchQuery1}
+              filteredCities={filteredCities1.slice(
+                (currentPage - 1) * citiesPerPage,
+                currentPage * citiesPerPage
+              )}
+              onSelectCity={setSelectedCity1}
+              error={error.city1}
+            />
+          </Col>
+          <Col>
+            <CitySearchInput
+              label="To:"
+              searchQuery={searchQuery2}
+              setSearchQuery={setSearchQuery2}
+              filteredCities={filteredCities2.slice(
+                (currentPage - 1) * citiesPerPage,
+                currentPage * citiesPerPage
+              )}
+              onSelectCity={setSelectedCity2}
+              error={error.city2}
+            />
+          </Col>
 
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <button
+          <Col>
+            <StartDatePicker
+              startDate={startDate}
+              setStartDate={setStartDate}
+              error={error.startDate}
+            />
+          </Col>
+          <Col>
+            <EndDatePicker
+              endDate={endDate}
+              setEndDate={setEndDate}
+              error={error.endDate}
+            />
+          </Col>
+        </Row>
+
+        <div className="text-center">
+          <Button
+            variant="primary"
             onClick={handleSubmit}
-            style={{
-              padding: "10px 20px",
-              fontSize: "16px",
-              borderRadius: "5px",
-              border: "1px solid #ddd",
-              backgroundColor: "#007bff",
-              color: "white",
-              cursor: "pointer",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}>
-            Search Flights
-          </button>
+            className="d-flex w-15 p-2"
+            disabled={loading}>
+            Show Flights
+          </Button>
           {loading && <Loader />}
         </div>
 
-        <div style={{ marginTop: "20px" }}>
-          {flights.length > 0 ? (
-            flights.map((flight) => (
-              <div
-                key={flight.id}
-                style={{
-                  backgroundColor: "#f9f9f9",
-                  padding: "15px",
-                  marginBottom: "10px",
-                  borderRadius: "5px",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                }}>
-                <strong>Flight Number:</strong> {flight.flightNumber}
-                <br />
-                <strong>Flight Name:</strong> {flight.flightName}
-                <br />
-                <strong>Departure Time:</strong> {flight.scheduleDate}
-                <br />
-                <strong>Arrival Time:</strong> {flight.actualLandingTime}
-                <br />
-                <strong>Airline:</strong> {flight.prefixICAO}
-                <br />
-                <strong>Terminal:</strong> {flight.route.destinations[0]}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "10px",
-                  }}>
-                  <button
-                    onClick={() => selectFlight(flight)}
-                    style={{
-                      padding: "10px 20px",
-                      fontSize: "16px",
-                      borderRadius: "5px",
-                      border: "1px solid #ddd",
-                      backgroundColor: "#007bff",
-                      color: "white",
-                      cursor: "pointer",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                    }}>
-                    Select Flight
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No flights found for the selected date</p>
-          )}
+        <div
+          className="position-absolute"
+          style={{
+            top: "50px",
+            right: "20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}>
+          <div
+            style={{
+              width: "50px",
+              height: "50px",
+              backgroundColor: "blue",
+            }}></div>
+          <div
+            style={{
+              width: "50px",
+              height: "50px",
+              backgroundColor: "green",
+            }}></div>
+          <div
+            style={{
+              width: "50px",
+              height: "50px",
+              backgroundColor: "red",
+            }}></div>
         </div>
-      </div>
-    </div>
+
+        {flights.length > 0 ? (
+          <Row className="mt-4 p-2 w-100">
+            {flights.map((flight) => (
+              <Row md={6} key={flight.id} className="">
+                <Card className="mb-3 bg-gradient-dark p-4 w-100">
+                  <Card.Body>
+                    <Card.Title>
+                      Flight Number: {flight.flightNumber}
+                    </Card.Title>
+                    <Card.Text>
+                      <strong>Flight Name:</strong> {flight.flightName}
+                      <br />
+                      <strong>Departure Time:</strong> {flight.scheduleDate}
+                      <br />
+                      <strong>Arrival Time:</strong> {flight.actualLandingTime}
+                      <br />
+                      <strong>Airline:</strong> {flight.prefixICAO}
+                      <br />
+                      <strong>Terminal:</strong> {flight.route.destinations[0]}
+                    </Card.Text>
+                    <div className="text-end">
+                      <Button
+                        variant="primary"
+                        onClick={() => selectFlight(flight)}>
+                        Book Flight
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Row>
+            ))}
+          </Row>
+        ) : null}
+      </Container>
+      <Footer />
+    </>
   );
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav, Container, NavDropdown, Badge } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
@@ -12,6 +12,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logoutApiCall] = useLogoutMutation();
+
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap();
@@ -21,12 +22,28 @@ const Header = () => {
       console.log(err);
     }
   };
+
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+      <Navbar
+        bg="dark"
+        variant="dark"
+        expand="lg"
+        collapseOnSelect
+        className="bg-dark text-white mt-auto py-3">
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>Flight App</Navbar.Brand>
+            <Navbar.Brand className="d-flex align-items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="me-2"
+                style={{ width: "30px", height: "30px" }}>
+                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+              </svg>
+              Flight App
+            </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Nav className="ms-auto">
@@ -43,7 +60,6 @@ const Header = () => {
               </>
             ) : (
               <>
-                {" "}
                 <LinkContainer to="/login">
                   <Nav.Link>
                     <FaSignInAlt /> Sign In
