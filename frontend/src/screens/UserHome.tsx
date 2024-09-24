@@ -8,6 +8,9 @@ import StartDatePicker from "../components/StartDatePicker";
 import EndDatePicker from "../components/EndDatePicker";
 import Footer from "../components/Footer";
 import { Button, Container, Row, Col, Card } from "react-bootstrap";
+import carImage from "../assets/car.jpg";
+import hotelImage from "../assets/hotel.jpg";
+import travel from "../assets/travel.jpg";
 
 function UserHome() {
   const [cities, setCities] = useState([]);
@@ -144,7 +147,7 @@ function UserHome() {
           Book Your Flight
         </h2>
 
-        <Row className="mb-4 flex-row">
+        <Row className="mb-4 flex-row ms-auto">
           <Col>
             <CitySearchInput
               label="From:"
@@ -186,81 +189,199 @@ function UserHome() {
               error={error.endDate}
             />
           </Col>
-        </Row>
 
-        <div className="text-center">
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            className="d-flex w-15 p-2"
-            disabled={loading}>
-            Show Flights
-          </Button>
-          {loading && <Loader />}
-        </div>
+          <div className="text-center p-3">
+            <Button
+              variant="primary"
+              onClick={handleSubmit}
+              className="d-flex w-15 p-2"
+              disabled={loading}>
+              Show Flights
+            </Button>
+            {loading && <Loader />}
+          </div>
 
-        <div
-          className="position-absolute"
-          style={{
-            top: "50px",
-            right: "20px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-          }}>
-          <div
-            style={{
-              width: "50px",
-              height: "50px",
-              backgroundColor: "blue",
-            }}></div>
-          <div
-            style={{
-              width: "50px",
-              height: "50px",
-              backgroundColor: "green",
-            }}></div>
-          <div
-            style={{
-              width: "50px",
-              height: "50px",
-              backgroundColor: "red",
-            }}></div>
-        </div>
+          <Row className="mt-4">
+            <Col className="flex-grow-1">
+              {flights.length > 0 ? (
+                <Row className="p-2">
+                  {flights.map((flight) => (
+                    <Row md={6} key={flight.id} className="">
+                      <Card className="mb-3 bg-gradient-dark p-4 w-100">
+                        <Card.Body>
+                          <Card.Title>
+                            Flight Number: {flight.flightNumber}
+                          </Card.Title>
+                          <Card.Text className="p-3 bg-light rounded">
+                            <div className="d-flex">
+                              <p className="mb-2 text-danger">
+                                <text>AMS-</text>
+                              </p>
+                              <p className="mb-0">
+                                <span className="text-primary">
+                                  -{flight.route.destinations[0]}
+                                </span>
+                              </p>
+                            </div>
+                            <div className="d-flex">
+                              <p className="mb-2">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  className="me-2"
+                                  style={{ width: "20px", height: "20px" }}>
+                                  <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                                </svg>
+                                <text>Departure Time: </text>
+                                <text>
+                                  {new Date(
+                                    flight.scheduleDateTime
+                                  ).toLocaleTimeString("en-GB", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </text>
+                              </p>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="me-2 ms-auto"
+                                style={{ width: "20px", height: "20px" }}>
+                                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                              </svg>
+                              <p className="mb-2 ms-auto">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  className="me-2"
+                                  style={{ width: "20px", height: "20px" }}>
+                                  <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                                </svg>
+                                <text>Landing Time: </text>
+                                <text>
+                                  {new Date(
+                                    flight.lastUpdatedAt
+                                  ).toLocaleTimeString("en-GB", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </text>
+                              </p>
+                            </div>
+                          </Card.Text>
 
-        {flights.length > 0 ? (
-          <Row className="mt-4 p-2 w-100">
-            {flights.map((flight) => (
-              <Row md={6} key={flight.id} className="">
-                <Card className="mb-3 bg-gradient-dark p-4 w-100">
-                  <Card.Body>
-                    <Card.Title>
-                      Flight Number: {flight.flightNumber}
-                    </Card.Title>
-                    <Card.Text>
-                      <strong>Flight Name:</strong> {flight.flightName}
-                      <br />
-                      <strong>Departure Time:</strong> {flight.scheduleDate}
-                      <br />
-                      <strong>Arrival Time:</strong> {flight.actualLandingTime}
-                      <br />
-                      <strong>Airline:</strong> {flight.prefixICAO}
-                      <br />
-                      <strong>Terminal:</strong> {flight.route.destinations[0]}
-                    </Card.Text>
-                    <div className="text-end">
-                      <Button
-                        variant="primary"
-                        onClick={() => selectFlight(flight)}>
-                        Book Flight
-                      </Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Row>
-            ))}
+                          <div className="text-end mb-3">
+                            <Button
+                              variant="primary"
+                              onClick={() => selectFlight(flight)}>
+                              Book Flight
+                            </Button>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Row>
+                  ))}
+                </Row>
+              ) : null}
+            </Col>
+
+            <Col
+              xs="auto"
+              className="d-flex align-items-start flex-column ms-auto">
+              <div className="bg-white rounded shadow-sm mb-3 position-relative">
+                <img
+                  src={carImage}
+                  style={{ width: "300px", height: "200px" }}
+                  className="rounded"
+                />
+                <div className="position-absolute bottom-0 start-0 d-flex align-items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="text-white p-1"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+                    }}>
+                    <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                  </svg>
+                  <h3
+                    className="text-white p-1"
+                    style={{
+                      marginLeft: "5px",
+                      boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+                    }}>
+                    CAR RENTALS
+                  </h3>
+                </div>
+              </div>
+
+              <div className="bg-white rounded shadow-sm mb-3 position-relative">
+                <img
+                  src={hotelImage}
+                  style={{ width: "300px", height: "200px" }}
+                  className="rounded"
+                />
+                <div className="position-absolute bottom-0 start-0 d-flex align-items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="text-white p-1"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+                    }}>
+                    <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                  </svg>
+                  <h3
+                    className="text-white p-1"
+                    style={{
+                      marginLeft: "5px",
+                      boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+                    }}>
+                    HOTELS
+                  </h3>
+                </div>
+              </div>
+              <div className="bg-white rounded shadow-sm mb-3 position-relative">
+                <img
+                  src={travel}
+                  style={{ width: "300px", height: "200px" }}
+                  className="rounded"
+                />
+                <div className="position-absolute bottom-0 start-0 d-flex align-items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="text-white p-1"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+                    }}>
+                    <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                  </svg>
+                  <h4
+                    className="text-white p-1"
+                    style={{
+                      marginLeft: "5px",
+                      boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+                    }}>
+                    TRAVEL PACKAGES
+                  </h4>
+                </div>
+              </div>
+            </Col>
           </Row>
-        ) : null}
+        </Row>
       </Container>
       <Footer />
     </>
