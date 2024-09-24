@@ -1,18 +1,13 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useBookFlightMutation } from "../slices/myflightsApiSlice";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import axios from "axios";
 import Footer from "../components/Footer";
+import { Col, Row } from "react-bootstrap";
 
 const MyFlights = () => {
   const location = useLocation();
   const { flight } = location.state || {}; // Get the flight data from location.state
-  const [bookFlight] = useBookFlightMutation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   if (!flight) {
     return <p>No flight selected.</p>;
@@ -20,7 +15,6 @@ const MyFlights = () => {
 
   const bookFlightSave = async () => {
     try {
-      // Gönderilen flight verilerini loglayın
       console.log("Sending flight data:", {
         flightNumber: flight.flightNumber,
         flightName: flight.flightName,
@@ -57,41 +51,72 @@ const MyFlights = () => {
 
   return (
     <>
-      <div style={{ padding: "20px" }}>
-        <h1>Selected Flight</h1>
-        <p>
-          <strong>Flight Number:</strong> {flight.flightNumber}
-        </p>
-        <p>
-          <strong>Flight Name:</strong> {flight.flightName}
-        </p>
-        <p>
-          <strong>Departure Time:</strong> {flight.scheduleDate}
-        </p>
-        <p>
-          <strong>Arrival Time:</strong> {flight.actualLandingTime}
-        </p>
-        <p>
-          <strong>Airline:</strong> {flight.prefixICAO}
-        </p>
-        <p>
-          <strong>Terminal:</strong> {flight.route.destinations[0]}
-        </p>
+      <div className="container my-4">
+        <div className="card shadow">
+          <div className="card-body">
+            <div className="d-flex">
+              <h3 className="card-text">
+                {new Date(flight.scheduleDateTime).toLocaleTimeString("en-GB", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </h3>
+              <h3>-</h3>
+              <h3 className="card-text">
+                {new Date(flight.lastUpdatedAt).toLocaleTimeString("en-GB", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </h3>
+            </div>
+            <hr className="my-3" />
+            <Row>
+              <Col>
+                <h5>Destinations</h5>
+                <div className="d-flex align-items-center">
+                  <p className="card-text p-1 mb-0">AMS to</p>
+                  <p className="card-text p-1 mb-0">
+                    {flight.route.destinations[0]}
+                  </p>
+                </div>
+              </Col>
+              <Col>
+                <h5>Flight ID</h5>
+                <div className="d-flex align-items-center">
+                  <p className="card-text p-1 mb-0">{flight.flightName}</p>
+                </div>
+              </Col>
+              <Col>
+                <h5>Arrival Date</h5>
+                <div className="d-flex align-items-center">
+                  <p className="card-text p-1 mb-0">{flight.scheduleDate}</p>
+                </div>
+              </Col>
+              <Col>
+                <h5>Terminal Code</h5>
+                <div className="d-flex align-items-center">
+                  <p className="card-text p-1 mb-0">
+                    {flight.route.destinations[0]}
+                  </p>
+                </div>
+              </Col>
+            </Row>
+            <hr className="my-3" />
+            <div className="text-center mt-3">
+              <button
+                onClick={bookFlightSave}
+                className="btn btn-primary btn-lg"
+                style={{
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                }}>
+                Book Flight
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <button
-        onClick={bookFlightSave}
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          borderRadius: "5px",
-          border: "1px solid #ddd",
-          backgroundColor: "#007bff",
-          color: "white",
-          cursor: "pointer",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-        }}>
-        Book Flight
-      </button>
       <Footer />
     </>
   );

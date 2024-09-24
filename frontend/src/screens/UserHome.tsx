@@ -191,14 +191,16 @@ function UserHome() {
           </Col>
 
           <div className="text-center p-3">
-            <Button
-              variant="primary"
-              onClick={handleSubmit}
-              className="d-flex w-15 p-2"
-              disabled={loading}>
-              Show Flights
-            </Button>
-            {loading && <Loader />}
+            <div className="d-flex justify-content-center">
+              <Button
+                variant="primary"
+                onClick={handleSubmit}
+                className="p-2"
+                disabled={loading}>
+                Show Flights
+              </Button>
+              {loading && <Loader />}
+            </div>
           </div>
 
           <Row className="mt-4">
